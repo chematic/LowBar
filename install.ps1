@@ -1,4 +1,3 @@
-```powershell
 #requires -Version 5.1
 <#
 .SYNOPSIS
@@ -365,4 +364,3 @@ finally {
             -ErrorAction SilentlyContinue
     }
 }
-```
