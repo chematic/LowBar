@@ -1,6 +1,6 @@
 # LowBar
 
-> Lightweight Windows taskbar appearance utility — native Win32, written in Go.
+> Lightweight Windows taskbar appearance utility, native Win32, written in Go.
 
 LowBar changes the appearance of the Windows taskbar without replacing the
 Windows shell or adding a heavy customization layer.
@@ -12,7 +12,7 @@ and no network activity from the application itself.
 
 ## Installation
 
-### Recommended — PowerShell
+### Recommended: PowerShell
 
 Open PowerShell and run:
 
