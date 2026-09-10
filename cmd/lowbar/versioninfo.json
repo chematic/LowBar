@@ -1,0 +1,34 @@
+{
+    "FixedFileInfo": {
+        "FileVersion": {
+            "Major": 1,
+            "Minor": 0,
+            "Patch": 0,
+            "Build": 0
+        },
+        "ProductVersion": {
+            "Major": 1,
+            "Minor": 0,
+            "Patch": 0,
+            "Build": 0
+        }
+    },
+    "StringFileInfo": {
+        "CompanyName": "",
+        "FileDescription": "LowBar",
+        "FileVersion": "0.1.0.0",
+        "InternalName": "lowbar",
+        "LegalCopyright": "",
+        "OriginalFilename": "LowBar.exe",
+        "ProductName": "LowBar",
+        "ProductVersion": "0.1.0.0"
+    },
+    "VarFileInfo": {
+        "Translation": {
+            "LangID": "0409",
+            "CharsetID": "04B0"
+        }
+    },
+    "IconPath": "LowBar.ico",
+    "ManifestPath": ""
+}
