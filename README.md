@@ -73,23 +73,23 @@ LowBar/
 │   └── lowbar/
 │       ├── main.go             # process entry point / lifecycle
 │       ├── constants.go        # Win32 constants, commands, styles, languages
-│       ├── types.go             # Win32 structs and application data types
-│       ├── state.go             # process-global application state
-│       ├── win32.go             # DLLs and Win32 procedure bindings
-│       ├── helpers.go            # small shared helpers
-│       ├── logging.go            # file logging and panic reporting
-│       ├── config.go             # settings.ini load/save/validation
-│       ├── localization.go       # menu strings
-│       ├── process.go            # DPI / AppUserModelID / hidden window setup
-│       ├── icon.go               # PNG/GDI+ and tray icon loading
-│       ├── taskbar.go            # taskbar discovery / composition policy
-│       ├── startup.go            # HKCU Run entry
-│       ├── tray.go               # Shell_NotifyIcon management
-│       ├── menu.go               # context menu / command dispatch
-│       ├── window.go             # hidden window procedure
-│       ├── message_loop.go       # Win32 message loop
-│       ├── instance.go           # single-instance mutex
-│       └── cleanup.go             # shutdown cleanup
+│       ├── types.go            # Win32 structs and application data types
+│       ├── state.go            # process-global application state
+│       ├── win32.go            # DLLs and Win32 procedure bindings
+│       ├── helpers.go          # small shared helpers
+│       ├── logging.go          # file logging and panic reporting
+│       ├── config.go           # settings.ini load/save/validation
+│       ├── localization.go     # menu strings
+│       ├── process.go          # DPI / AppUserModelID / hidden window setup
+│       ├── icon.go             # PNG/GDI+ and tray icon loading
+│       ├── taskbar.go          # taskbar discovery / composition policy
+│       ├── startup.go          # HKCU Run entry
+│       ├── tray.go             # Shell_NotifyIcon management
+│       ├── menu.go             # context menu / command dispatch
+│       ├── window.go           # hidden window procedure
+│       ├── message_loop.go     # Win32 message loop
+│       ├── instance.go         # single-instance mutex
+│       └── cleanup.go          # shutdown cleanup
 ├── Assets/
 ├── docs/
 │   ├── INSTALLATION.md
