@@ -56,10 +56,8 @@ A good first set is:
 
 ```text
 assets/
-├── screenshot-menu.png
 ├── screenshot-blur.png
-├── screenshot-clear.png
-└── lowbar-demo.gif
+└── screenshot-clear.png
 ```
 
 ## Architecture
@@ -110,13 +108,13 @@ Windows / amd64:
 ```powershell
 $env:GOOS="windows"
 $env:GOARCH="amd64"
-go build -trimpath -o LowBar.exe ./cmd/lowbar
+go build -trimpath -ldflags="-s -w -H=windowsgui" -o LowBar.exe ./cmd/lowbar
 ```
 
 For a smaller release binary:
 
 ```powershell
-go build -trimpath -ldflags="-s -w" -o LowBar.exe ./cmd/lowbar
+go build -trimpath -ldflags="-s -w -H=windowsgui" -o LowBar.exe ./cmd/lowbar
 ```
 
 The application remains Windows-only because it directly uses Win32 APIs.
