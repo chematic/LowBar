@@ -60,29 +60,54 @@ func setAccent(hwnd syscall.Handle, style int) bool {
 }
 
 func applyStyle(style int) {
+	applyStyleInternal(style, true)
+}
+
+func reapplyStyleSilently(style int) {
+	applyStyleInternal(style, false)
+}
+
+func applyStyleInternal(style int, verbose bool) {
 	defer recoverPanic("applyStyle")
 	if !validStyle(style) {
-		logEvent("ERROR", "taskbar.applyStyle", fmt.Sprintf("invalid style=%d; falling back to Normal", style))
+		if verbose {
+			logEvent("ERROR", "taskbar.applyStyle", fmt.Sprintf("invalid style=%d; falling back to Normal", style))
+		}
 		style = styleNormal
 	}
+
 	windows := taskbarWindows()
 	if len(windows) == 0 {
-		logEvent("ERROR", "taskbar.applyStyle", "no taskbar windows found")
+		if verbose {
+			logEvent("ERROR", "taskbar.applyStyle", "no taskbar windows found")
+		}
 		return
 	}
+
 	success := 0
 	for _, hwnd := range windows {
 		if setAccent(hwnd, style) {
 			success++
 		}
 	}
+
 	if success == len(windows) {
 		processStyle = style
 		styleApplied = style != styleNormal
-		logEvent("INFO", "taskbar.applyStyle", fmt.Sprintf("style=%d applied to %d taskbar window(s)", style, success))
-	} else {
+		if verbose {
+			logEvent("INFO", "taskbar.applyStyle", fmt.Sprintf("style=%d applied to %d taskbar window(s)", style, success))
+		}
+	} else if verbose {
 		logEvent("ERROR", "taskbar.applyStyle", fmt.Sprintf("style=%d partially applied success=%d total=%d", style, success, len(windows)))
 	}
+}
+
+func maintainTaskbarStyle() {
+	defer recoverPanic("taskbar.maintain")
+	if globalConfig == nil || shuttingDown || globalConfig.style == styleNormal {
+		return
+	}
+	reapplyStyleSilently(globalConfig.style)
 }
 
 func restoreTaskbar() {

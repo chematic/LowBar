@@ -1,6 +1,6 @@
 # LowBar
 
-> Lightweight Windows taskbar appearance utility, native Win32, written in Go.
+> Lightweight Windows taskbar appearance utility — native Win32, written in Go.
 
 LowBar changes the appearance of the Windows taskbar without replacing the
 Windows shell or adding a heavy customization layer.
@@ -12,7 +12,7 @@ and no network activity from the application itself.
 
 ## Installation
 
-### Recommended: PowerShell
+### Recommended — PowerShell
 
 Open PowerShell and run:
 
@@ -20,9 +20,11 @@ Open PowerShell and run:
 iwr https://raw.githubusercontent.com/chematic/LowBar/main/install.ps1 | iex
 ```
 
-The installer downloads **only the official `LowBar.exe` release asset**. It
+The installer downloads **only the official `LowBar.zip` release asset**. It
 installs the application for the current Windows user and does not clone or
-install the source repository.
+install the source repository. Re-running the installer updates an existing
+installation in place, restarts LowBar automatically, and keeps the existing
+user configuration.
 
 It creates:
 
@@ -43,7 +45,8 @@ instructions.
 - System tray control
 - Five languages: **English, Français, Español, Deutsch, Русский**
 - Optional Windows startup integration
-- Automatic taskbar style reapplication after Explorer refresh/restart
+- Automatic taskbar style reapplication after Explorer refresh/restart or Windows composition resets
+- Lightweight background taskbar style monitoring for fullscreen/PiP transitions
 - Single-instance protection
 - Local configuration with validation and automatic repair
 - Native Win32 implementation with no UI framework dependency
@@ -73,23 +76,23 @@ LowBar/
 │   └── lowbar/
 │       ├── main.go             # process entry point / lifecycle
 │       ├── constants.go        # Win32 constants, commands, styles, languages
-│       ├── types.go            # Win32 structs and application data types
-│       ├── state.go            # process-global application state
-│       ├── win32.go            # DLLs and Win32 procedure bindings
-│       ├── helpers.go          # small shared helpers
-│       ├── logging.go          # file logging and panic reporting
-│       ├── config.go           # settings.ini load/save/validation
-│       ├── localization.go     # menu strings
-│       ├── process.go          # DPI / AppUserModelID / hidden window setup
-│       ├── icon.go             # PNG/GDI+ and tray icon loading
-│       ├── taskbar.go          # taskbar discovery / composition policy
-│       ├── startup.go          # HKCU Run entry
-│       ├── tray.go             # Shell_NotifyIcon management
-│       ├── menu.go             # context menu / command dispatch
-│       ├── window.go           # hidden window procedure
-│       ├── message_loop.go     # Win32 message loop
-│       ├── instance.go         # single-instance mutex
-│       └── cleanup.go          # shutdown cleanup
+│       ├── types.go             # Win32 structs and application data types
+│       ├── state.go             # process-global application state
+│       ├── win32.go             # DLLs and Win32 procedure bindings
+│       ├── helpers.go            # small shared helpers
+│       ├── logging.go            # file logging and panic reporting
+│       ├── config.go             # settings.ini load/save/validation
+│       ├── localization.go       # menu strings
+│       ├── process.go            # DPI / AppUserModelID / hidden window setup
+│       ├── icon.go               # PNG/GDI+ and tray icon loading
+│       ├── taskbar.go            # taskbar discovery / composition policy
+│       ├── startup.go            # HKCU Run entry
+│       ├── tray.go               # Shell_NotifyIcon management
+│       ├── menu.go               # context menu / command dispatch
+│       ├── window.go             # hidden window procedure
+│       ├── message_loop.go       # Win32 message loop
+│       ├── instance.go           # single-instance mutex
+│       └── cleanup.go             # shutdown cleanup
 ├── Assets/
 ├── docs/
 │   ├── INSTALLATION.md

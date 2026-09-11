@@ -4,12 +4,18 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"runtime"
 	"runtime/debug"
 	"unsafe"
 )
 
 func main() {
+	if len(os.Args) > 1 && os.Args[1] == "--shutdown" {
+		requestExistingInstanceExit()
+		return
+	}
+
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
 	openLog()
@@ -51,6 +57,7 @@ func main() {
 	}
 	trayData = &tray
 	applyStyle(cfg.style)
+	startTaskbarMonitor(hwnd)
 	if err := saveConfig(cfg); err != nil {
 		logError("config.save", "initial config save failed", err)
 	}

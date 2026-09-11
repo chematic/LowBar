@@ -19,4 +19,5 @@ var (
 	logHandle      *os.File
 	shuttingDown   bool
 	menuPosted     bool
+	taskbarTimer   bool
 )

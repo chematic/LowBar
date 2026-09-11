@@ -6,6 +6,7 @@ const (
 	wmDestroy    = 0x0002
 	wmClose      = 0x0010
 	wmCommand    = 0x0111
+	wmTimer      = 0x0113
 	wmApp        = 0x8000
 	wmTray       = wmApp + 1
 	wmShowMenu   = wmApp + 2
@@ -56,14 +57,16 @@ const (
 	errorAlreadyExists   = 183
 	errorClassAlreadyReg = 1410
 
-	appUserModelID = "Pluton.LowBar"
-	appName        = "LowBar"
-	configDirName  = "LowBar"
-	configFileName = "settings.ini"
-	logFileName    = "lowbar.log"
-	mutexName      = "Local\\PlutonLowBar.SingleInstance"
-	windowClass    = "PlutonLowBarHiddenWindow"
-	taskbarMessage = "TaskbarCreated"
+	appUserModelID       = "Pluton.LowBar"
+	appName              = "LowBar"
+	configDirName        = "LowBar"
+	configFileName       = "settings.ini"
+	logFileName          = "lowbar.log"
+	mutexName            = "Local\\PlutonLowBar.SingleInstance"
+	windowClass          = "PlutonLowBarHiddenWindow"
+	taskbarMessage       = "TaskbarCreated"
+	taskbarTimerID       = 1
+	taskbarTimerInterval = 1000
 
 	cmdStyleNormal     = 100
 	cmdStyleOpaque     = 101

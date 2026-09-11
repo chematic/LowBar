@@ -35,6 +35,8 @@ var (
 	checkMenuItem             = user32.NewProc("CheckMenuItem")
 	setForegroundWindow       = user32.NewProc("SetForegroundWindow")
 	postMessageW              = user32.NewProc("PostMessageW")
+	setTimer                  = user32.NewProc("SetTimer")
+	killTimer                 = user32.NewProc("KillTimer")
 	messageBoxW               = user32.NewProc("MessageBoxW")
 	registerWindowMessageW    = user32.NewProc("RegisterWindowMessageW")
 

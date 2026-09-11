@@ -14,10 +14,11 @@ iwr https://raw.githubusercontent.com/chematic/LowBar/main/install.ps1 | iex
 The installer:
 
 1. queries the latest GitHub release of `chematic/LowBar`;
-2. downloads only the release asset `LowBar.exe`;
+2. downloads only the release asset `LowBar.zip`;
 3. installs it for the current Windows user under `%LOCALAPPDATA%\Programs\LowBar`;
-4. creates `LowBar.lnk` in `%APPDATA%\Microsoft\Windows\Start Menu\Programs`;
-5. asks whether a Desktop shortcut should also be created.
+4. creates or updates `LowBar.lnk` in `%APPDATA%\Microsoft\Windows\Start Menu\Programs`;
+5. asks about a Desktop shortcut on first installation only;
+6. when LowBar is already installed, requests a graceful shutdown, replaces the executable/assets, and starts the updated LowBar automatically.
 
 No Go source code, repository checkout, or development files are installed.
 
@@ -38,7 +39,9 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 The installer does not require administrator privileges because it installs only
-for the current user.
+for the current user under `%LOCALAPPDATA%\Programs\LowBar`. An administrator prompt
+is only relevant if you explicitly run it with a system-wide/custom protected
+installation path that your account cannot write to.
 
 ## Start Menu layout
 

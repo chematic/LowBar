@@ -1,13 +1,15 @@
 #requires -Version 5.1
 <#
 .SYNOPSIS
-    Installs the official LowBar release for the current Windows user.
+    Installs or updates the official LowBar release for the current Windows user.
 
 .DESCRIPTION
     Downloads the official LowBar release package from GitHub,
     extracts only LowBar.exe and the Assets directory,
     installs them under the current user's local programs directory,
-    creates a Start Menu shortcut, and optionally creates a Desktop shortcut.
+    replaces an existing installation in place, restarts LowBar after an update,
+    creates a Start Menu shortcut, and optionally creates a Desktop shortcut
+    on first installation.
 
     The script never clones or downloads the source repository.
     The GitHub release asset must be named LowBar.zip and contain:
@@ -103,6 +105,92 @@ function Find-ReleaseAsset {
     }
 
     return $asset
+}
+
+function Stop-LowBarForUpdate {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$TargetPath
+    )
+
+    $running = @(Get-Process -Name 'LowBar' -ErrorAction SilentlyContinue)
+
+    if ($running.Count -eq 0) {
+        return
+    }
+
+    $matching = @(
+        $running | Where-Object {
+            try {
+                $path = $_.Path
+                [string]::IsNullOrWhiteSpace($path) -or
+                    [string]::Equals(
+                        [System.IO.Path]::GetFullPath($path),
+                        [System.IO.Path]::GetFullPath($TargetPath),
+                        [System.StringComparison]::OrdinalIgnoreCase
+                    )
+            }
+            catch {
+                $true
+            }
+        }
+    )
+
+    if ($matching.Count -eq 0) {
+        return
+    }
+
+    Write-Step 'Stopping the running LowBar instance for the update...'
+
+    if (Test-Path -LiteralPath $TargetPath -PathType Leaf) {
+        try {
+            Start-Process `
+                -FilePath $TargetPath `
+                -ArgumentList '--shutdown' `
+                -WindowStyle Hidden `
+                -ErrorAction Stop |
+                Out-Null
+        }
+        catch {
+            Write-Host '[LowBar] Graceful shutdown request could not be sent; continuing with process shutdown.' -ForegroundColor DarkYellow
+        }
+    }
+
+    for ($i = 0; $i -lt 40; $i++) {
+        Start-Sleep -Milliseconds 250
+
+        $stillRunning = @(Get-Process -Name 'LowBar' -ErrorAction SilentlyContinue | Where-Object {
+            $_.Id -in $matching.Id
+        })
+
+        if ($stillRunning.Count -eq 0) {
+            return
+        }
+    }
+
+    Write-Host '[LowBar] LowBar did not exit within 10 seconds; stopping it to complete the update.' -ForegroundColor DarkYellow
+
+    foreach ($process in $matching) {
+        try {
+            Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+        }
+        catch {
+        }
+    }
+
+    for ($i = 0; $i -lt 20; $i++) {
+        Start-Sleep -Milliseconds 250
+
+        $stillRunning = @(Get-Process -Name 'LowBar' -ErrorAction SilentlyContinue | Where-Object {
+            $_.Id -in $matching.Id
+        })
+
+        if ($stillRunning.Count -eq 0) {
+            return
+        }
+    }
+
+    throw 'LowBar could not be stopped, so the update was cancelled.'
 }
 
 function New-Shortcut {
@@ -220,16 +308,14 @@ try {
 
     $targetExe = Join-Path $InstallRoot 'LowBar.exe'
     $targetAssets = Join-Path $InstallRoot 'Assets'
+    $isUpdate = Test-Path -LiteralPath $targetExe -PathType Leaf
 
-    $running = Get-Process `
-        -Name 'LowBar' `
-        -ErrorAction SilentlyContinue
-
-    if ($null -ne $running) {
-        throw 'LowBar is currently running. Close LowBar and run the installer again.'
+    if ($isUpdate) {
+        Write-Step 'Existing LowBar installation detected; updating it in place.'
+        Stop-LowBarForUpdate -TargetPath $targetExe
     }
 
-    Write-Step 'Installing LowBar.exe...'
+    Write-Step $(if ($isUpdate) { 'Replacing LowBar.exe...' } else { 'Installing LowBar.exe...' })
 
     Copy-Item `
         -LiteralPath $packageExe `
@@ -285,7 +371,7 @@ try {
     $createDesktopShortcut = $false
     $desktopShortcut = $null
 
-    if (-not $NoDesktopPrompt) {
+    if (-not $NoDesktopPrompt -and -not $isUpdate) {
         $desktopAnswer = Read-Host `
             'Add a LowBar shortcut to the Desktop? [Y/N]'
 
@@ -315,7 +401,16 @@ try {
     }
 
     Write-Success `
-        "LowBar $($release.tag_name) installed successfully."
+        $(if ($isUpdate) { "LowBar $($release.tag_name) updated successfully." } else { "LowBar $($release.tag_name) installed successfully." })
+
+    if ($isUpdate) {
+        Write-Step 'Starting the updated LowBar instance...'
+        Start-Process `
+            -FilePath $targetExe `
+            -WorkingDirectory $InstallRoot `
+            -ErrorAction Stop |
+            Out-Null
+    }
 
     Write-Host `
         "Start Menu: $startMenuShortcut" `
@@ -346,7 +441,9 @@ catch {
         "[LowBar] Installation failed: $($_.Exception.Message)" `
         -ForegroundColor Red
 
-    exit 1
+    Write-Host `
+        '[LowBar] PowerShell session was left open so you can review the error.' `
+        -ForegroundColor DarkGray
 }
 finally {
     if ($tempZip -and (Test-Path -LiteralPath $tempZip)) {

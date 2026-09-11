@@ -19,3 +19,12 @@ func ensureSingleInstance() syscall.Handle {
 	}
 	return syscall.Handle(mutex)
 }
+
+func requestExistingInstanceExit() {
+	className := utf16ptr(windowClass)
+	hwnd, _, _ := findWindowW.Call(uintptr(unsafe.Pointer(className)), 0)
+	if hwnd == 0 {
+		return
+	}
+	postMessageW.Call(hwnd, wmClose, 0, 0)
+}
