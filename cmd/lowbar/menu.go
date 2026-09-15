@@ -94,7 +94,6 @@ func showTrayMenu(hwnd syscall.Handle, cfg *config) {
 	}
 	if ret, _, err := setForegroundWindow.Call(uintptr(hwnd)); ret == 0 {
 		logWin32Error("tray.menu", "SetForegroundWindow", err)
-		return
 	}
 	selected, _, err := trackPopupMenuEx.Call(menu, tpmRetCmd|tpmNoNotify|tpmNoAnimation|tpmLeftButton|tpmRightButton, uintptr(cursor.x), uintptr(cursor.y), uintptr(hwnd), 0)
 	// Required by TrackPopupMenuEx so the shell/menu focus is released cleanly.

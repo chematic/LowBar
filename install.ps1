@@ -5,7 +5,7 @@
 
 .DESCRIPTION
     Downloads the official LowBar release package from GitHub,
-    extracts only LowBar.exe and the Assets directory,
+    extracts LowBar.exe, LowBarExplorerHook.dll, and the Assets directory,
     installs them under the current user's local programs directory,
     replaces an existing installation in place, restarts LowBar after an update,
     creates a Start Menu shortcut, and optionally creates a Desktop shortcut
@@ -15,6 +15,7 @@
     The GitHub release asset must be named LowBar.zip and contain:
 
         LowBar.exe
+        LowBarExplorerHook.dll
         Assets\...
 
 .EXAMPLE
@@ -288,10 +289,15 @@ try {
         -Force
 
     $packageExe = Join-Path $tempExtract 'LowBar.exe'
+    $packageHook = Join-Path $tempExtract 'LowBarExplorerHook.dll'
     $packageAssets = Join-Path $tempExtract 'Assets'
 
     if (-not (Test-Path -LiteralPath $packageExe -PathType Leaf)) {
         throw "The release package is invalid: 'LowBar.exe' was not found at the archive root."
+    }
+
+    if (-not (Test-Path -LiteralPath $packageHook -PathType Leaf)) {
+        throw "The release package is invalid: 'LowBarExplorerHook.dll' was not found at the archive root."
     }
 
     if (-not (Test-Path -LiteralPath $packageAssets -PathType Container)) {
@@ -307,6 +313,7 @@ try {
         Out-Null
 
     $targetExe = Join-Path $InstallRoot 'LowBar.exe'
+    $targetHook = Join-Path $InstallRoot 'LowBarExplorerHook.dll'
     $targetAssets = Join-Path $InstallRoot 'Assets'
     $isUpdate = Test-Path -LiteralPath $targetExe -PathType Leaf
 
@@ -320,6 +327,13 @@ try {
     Copy-Item `
         -LiteralPath $packageExe `
         -Destination $targetExe `
+        -Force
+
+    Write-Step $(if ($isUpdate) { 'Replacing LowBarExplorerHook.dll...' } else { 'Installing LowBarExplorerHook.dll...' })
+
+    Copy-Item `
+        -LiteralPath $packageHook `
+        -Destination $targetHook `
         -Force
 
     Write-Step 'Installing application assets...'
@@ -339,6 +353,10 @@ try {
 
     if (-not (Test-Path -LiteralPath $targetExe -PathType Leaf)) {
         throw 'LowBar.exe was not installed correctly.'
+    }
+
+    if (-not (Test-Path -LiteralPath $targetHook -PathType Leaf)) {
+        throw 'LowBarExplorerHook.dll was not installed correctly.'
     }
 
     if (-not (Test-Path -LiteralPath $targetAssets -PathType Container)) {

@@ -49,6 +49,14 @@ func setAccent(hwnd syscall.Handle, style int) bool {
 	if hwnd == 0 {
 		return false
 	}
+	if style == styleAcrylic {
+		clearPolicy := accentPolicy{state: 0, flags: 0, gradient: 0, animation: 0}
+		clearData := compositionAttributeData{attribute: 19, data: uintptr(unsafe.Pointer(&clearPolicy)), dataSize: unsafe.Sizeof(clearPolicy)}
+		if ret, _, err := setWindowComposition.Call(uintptr(hwnd), uintptr(unsafe.Pointer(&clearData))); ret == 0 {
+			logWin32Error("taskbar.setAccent", fmt.Sprintf("SetWindowCompositionAttribute hwnd=%d style=%d transition-clear", hwnd, style), err)
+			return false
+		}
+	}
 	policy := accentForStyle(style)
 	data := compositionAttributeData{attribute: 19, data: uintptr(unsafe.Pointer(&policy)), dataSize: unsafe.Sizeof(policy)}
 	ret, _, err := setWindowComposition.Call(uintptr(hwnd), uintptr(unsafe.Pointer(&data)))
@@ -100,14 +108,6 @@ func applyStyleInternal(style int, verbose bool) {
 	} else if verbose {
 		logEvent("ERROR", "taskbar.applyStyle", fmt.Sprintf("style=%d partially applied success=%d total=%d", style, success, len(windows)))
 	}
-}
-
-func maintainTaskbarStyle() {
-	defer recoverPanic("taskbar.maintain")
-	if globalConfig == nil || shuttingDown || globalConfig.style == styleNormal {
-		return
-	}
-	reapplyStyleSilently(globalConfig.style)
 }
 
 func restoreTaskbar() {

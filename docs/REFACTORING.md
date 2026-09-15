@@ -1,6 +1,6 @@
 # LowBar refactoring: step by step
 
-This refactor is structural. The objective is to make the source repository look and feel like a real multi-file Go project while preserving the existing runtime behavior.
+This refactor is structural and includes a taskbar-persistence correction. The taskbar protection is event-driven and runs at the Explorer composition boundary instead of periodically polling the taskbar.
 
 ## Step 1 — Create the module
 
@@ -99,7 +99,13 @@ LockOSThread
 → cleanup
 ```
 
-## Step 8 — Verify before replacing the original
+## Step 8 — Explorer taskbar persistence
+
+The taskbar reset problem is handled by `explorer_integration.go` plus `explorerhook/LowBarExplorerHook.dll`. LowBar injects the helper into the Explorer process owning the taskbar. The helper intercepts Explorer calls to `SetWindowCompositionAttribute` for the taskbar and asks LowBar whether its composition policy should be protected. This occurs only when Explorer actually makes the composition call; there is no timer-based refresh loop.
+
+The same integration is triggered again when Windows broadcasts `TaskbarCreated`, which covers Explorer/taskbar recreation.
+
+## Step 9 — Verify before replacing the original
 
 Build the Windows binary:
 
@@ -119,6 +125,8 @@ Then verify on Windows:
 8. Explorer restart recreates the tray icon and reapplies the selected style.
 9. Exiting restores the Windows taskbar default.
 10. `settings.ini` is still repaired when style/language values are invalid.
+11. `LowBarExplorerHook.dll` is present beside `LowBar.exe` in release installations.
+12. Opening Start, fullscreen transitions, and Explorer taskbar recreation do not require a timer-based repaint loop.
 
 ## Why this structure is intentional
 

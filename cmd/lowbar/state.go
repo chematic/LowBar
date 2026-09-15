@@ -13,11 +13,14 @@ var (
 	trayIcon       syscall.Handle
 	customTrayIcon bool
 	taskbarMsg     uint32
+	hookBlockMsg   uint32
 	processMutex   syscall.Handle
 	processStyle   = styleNormal
 	styleApplied   bool
 	logHandle      *os.File
 	shuttingDown   bool
 	menuPosted     bool
-	taskbarTimer   bool
+	explorerPID    uint32
+	explorerModule uintptr
+	mainHwnd       syscall.Handle
 )

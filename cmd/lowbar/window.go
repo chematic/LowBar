@@ -33,21 +33,22 @@ func windowProc(hwnd uintptr, message uint32, wParam uintptr, lParam uintptr) ui
 		return 0
 	case wmCommand:
 		return 0
-	case wmTimer:
-		if wParam == taskbarTimerID {
-			maintainTaskbarStyle()
-		}
-		return 0
 	case wmClose:
-		stopTaskbarMonitor(syscall.Handle(hwnd))
 		destroyWindow.Call(hwnd)
 		return 0
 	case wmDestroy:
 		postQuitMessage.Call(0)
 		return 0
 	}
+	if hookBlockMsg != 0 && message == hookBlockMsg {
+		if globalConfig != nil && !shuttingDown {
+			return 1
+		}
+		return 0
+	}
 	if taskbarMsg != 0 && message == taskbarMsg && globalConfig != nil && !shuttingDown {
 		reinstallTrayIcon(syscall.Handle(hwnd))
+		installExplorerHookForTaskbarCreation()
 		applyStyle(globalConfig.style)
 		return 0
 	}

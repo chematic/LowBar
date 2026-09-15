@@ -29,7 +29,7 @@ $script = Invoke-RestMethod https://raw.githubusercontent.com/chematic/LowBar/ma
 & ([scriptblock]::Create($script)) -Version v0.1.0
 ```
 
-The release must contain an asset named `LowBar.exe`.
+The GitHub release must contain a runtime asset named `LowBar.zip`. The archive must contain `LowBar.exe`, `LowBarExplorerHook.dll`, the `Assets` directory, and `LICENSE` at its root.
 
 ## Run the installer from a downloaded file
 
@@ -67,3 +67,7 @@ Remove-Item "$([Environment]::GetFolderPath('Desktop'))\LowBar.lnk" -Force -Erro
 
 If LowBar is configured to start with Windows, disable **Open at boot** from
 its tray menu before uninstalling.
+
+### Explorer hook payload
+
+The release package also installs `LowBarExplorerHook.dll` next to `LowBar.exe`. It is loaded only into the Explorer process that owns the Windows taskbar and is unloaded by Windows when that Explorer process exits. The hook is required for the taskbar persistence path and should remain beside the executable.

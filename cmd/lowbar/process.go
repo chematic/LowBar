@@ -4,6 +4,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"syscall"
 	"unsafe"
 )
@@ -26,8 +27,8 @@ func getModuleHandle() syscall.Handle {
 }
 
 func prepareProcess() {
-	if ret, _, err := setCurrentProcessAppID.Call(uintptr(unsafe.Pointer(utf16ptr(appUserModelID)))); ret == 0 {
-		logWin32Error("process", "SetCurrentProcessExplicitAppUserModelID", err)
+	if ret, _, _ := setCurrentProcessAppID.Call(uintptr(unsafe.Pointer(utf16ptr(appUserModelID)))); ret != 0 {
+		logEvent("WARN", "process", fmt.Sprintf("SetCurrentProcessExplicitAppUserModelID hr=0x%08X", uint32(ret)))
 	}
 	if ret, _, err := setProcessDpiAwarenessCtx.Call(uintptr(^uintptr(0))); ret == 0 {
 		logWin32Error("process", "SetProcessDpiAwarenessContext", err)

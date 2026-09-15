@@ -40,6 +40,8 @@ func main() {
 	globalConfig = &cfg
 	taskbarRaw, _, _ := registerWindowMessageW.Call(uintptr(unsafe.Pointer(utf16ptr(taskbarMessage))))
 	taskbarMsg = uint32(taskbarRaw)
+	hookRaw, _, _ := registerWindowMessageW.Call(uintptr(unsafe.Pointer(utf16ptr("LowBar.ShouldBlockTaskbarComposition"))))
+	hookBlockMsg = uint32(hookRaw)
 	if err := loadTrayIcon(); err != nil {
 		showError(appName, err)
 		return
@@ -49,6 +51,7 @@ func main() {
 		showError(appName, err)
 		return
 	}
+	mainHwnd = hwnd
 	defer destroyWindow.Call(uintptr(hwnd))
 	tray, err := installTrayIcon(hwnd)
 	if err != nil {
@@ -57,7 +60,7 @@ func main() {
 	}
 	trayData = &tray
 	applyStyle(cfg.style)
-	startTaskbarMonitor(hwnd)
+	startExplorerIntegration(hwnd)
 	if err := saveConfig(cfg); err != nil {
 		logError("config.save", "initial config save failed", err)
 	}
