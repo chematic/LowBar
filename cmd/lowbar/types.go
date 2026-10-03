@@ -62,16 +62,17 @@ type compositionAttributeData struct {
 }
 
 type config struct {
-	style    int
-	language int
-	startup  bool
+	style      int
+	language   int
+	startup    bool
+	autoUpdate bool
 }
 
 type stringsTable struct {
-	style, normal, opaque, clear, blur, acrylic string
-	openBoot, refresh, language                 string
-	english, french, spanish, german, russian   string
-	about, exit, aboutBody, aboutTitle          string
+	style, normal, opaque, clear, blur, acrylic            string
+	openBoot, refresh, checkUpdates, autoUpdates, language string
+	english, french, spanish, german, russian              string
+	about, exit, aboutBody, aboutTitle                     string
 }
 
 type gdiplusStartupInput struct {

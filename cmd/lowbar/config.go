@@ -60,6 +60,8 @@ func loadConfig() config {
 			}
 		case "startup":
 			cfg.startup = value == "1" || strings.EqualFold(value, "true")
+		case "auto_update":
+			cfg.autoUpdate = value == "1" || strings.EqualFold(value, "true")
 		}
 	}
 	if err := scanner.Err(); err != nil {
@@ -69,7 +71,7 @@ func loadConfig() config {
 	if repaired {
 		_ = saveConfig(cfg)
 	}
-	logEvent("INFO", "config.load", fmt.Sprintf("loaded style=%d language=%d startup=%t", cfg.style, cfg.language, cfg.startup))
+	logEvent("INFO", "config.load", fmt.Sprintf("loaded style=%d language=%d startup=%t auto_update=%t", cfg.style, cfg.language, cfg.startup, cfg.autoUpdate))
 	return cfg
 }
 
@@ -83,7 +85,7 @@ func saveConfig(cfg config) error {
 	if err := os.MkdirAll(filepath.Dir(configPath()), 0700); err != nil {
 		return err
 	}
-	content := fmt.Sprintf("style=%d\nlanguage=%d\nstartup=%d\n", cfg.style, cfg.language, boolInt(cfg.startup))
+	content := fmt.Sprintf("style=%d\nlanguage=%d\nstartup=%d\nauto_update=%d\n", cfg.style, cfg.language, boolInt(cfg.startup), boolInt(cfg.autoUpdate))
 	tmp := configPath() + ".tmp"
 	if err := os.WriteFile(tmp, []byte(content), 0600); err != nil {
 		return err

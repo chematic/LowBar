@@ -52,6 +52,7 @@ var (
 	freeLibrary         = kernel32.NewProc("FreeLibrary")
 	getLastError        = kernel32.NewProc("GetLastError")
 	getModuleHandleW    = kernel32.NewProc("GetModuleHandleW")
+	moveFileExW         = kernel32.NewProc("MoveFileExW")
 	loadLibraryW        = kernel32.NewProc("LoadLibraryW")
 
 	regOpenKeyExW    = advapi32.NewProc("RegOpenKeyExW")

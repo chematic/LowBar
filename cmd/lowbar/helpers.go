@@ -15,7 +15,7 @@ func utf16from(s string, dst []uint16) {
 }
 
 func makeConfig() config {
-	return config{style: styleBlur, language: langEnglish, startup: false}
+	return config{style: styleBlur, language: langEnglish, startup: false, autoUpdate: true}
 }
 
 func boolInt(v bool) int {

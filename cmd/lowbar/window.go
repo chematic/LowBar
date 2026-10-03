@@ -33,6 +33,17 @@ func windowProc(hwnd uintptr, message uint32, wParam uintptr, lParam uintptr) ui
 		return 0
 	case wmCommand:
 		return 0
+	case wmBeginUpdate:
+		if !shuttingDown {
+			shuttingDown = true
+			postMessageW.Call(hwnd, wmClose, 0, 0)
+		}
+		return 0
+	case wmUpdateResult:
+		if message := takePendingUpdateMessage(); message != "" && !shuttingDown {
+			showInfo(syscall.Handle(hwnd), "LowBar Updates", message)
+		}
+		return 0
 	case wmClose:
 		destroyWindow.Call(hwnd)
 		return 0

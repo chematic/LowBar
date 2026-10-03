@@ -74,7 +74,7 @@ func executablePath() string {
 }
 
 func logContext() {
-	logEvent("INFO", "startup", fmt.Sprintf("version=dev | go=%s | arch=%s | os=%s | pid=%d | exe=%s | temp=%s | config=%s | log=%s", runtime.Version(), runtime.GOARCH, runtime.GOOS, os.Getpid(), executablePath(), os.TempDir(), configPath(), logPath()))
+	logEvent("INFO", "startup", fmt.Sprintf("version=%s | go=%s | arch=%s | os=%s | pid=%d | exe=%s | temp=%s | config=%s | log=%s", buildVersion, runtime.Version(), runtime.GOARCH, runtime.GOOS, os.Getpid(), executablePath(), os.TempDir(), configPath(), logPath()))
 }
 
 func closeLog() {

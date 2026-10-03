@@ -3,16 +3,18 @@
 package main
 
 const (
-	wmDestroy    = 0x0002
-	wmClose      = 0x0010
-	wmCommand    = 0x0111
-	wmApp        = 0x8000
-	wmTray       = wmApp + 1
-	wmShowMenu   = wmApp + 2
-	wmNull       = 0x0000
-	wmRButtonUp  = 0x0205
-	wmLButtonUp  = 0x0202
-	wmLButtonDbl = 0x0203
+	wmDestroy      = 0x0002
+	wmClose        = 0x0010
+	wmCommand      = 0x0111
+	wmApp          = 0x8000
+	wmTray         = wmApp + 1
+	wmShowMenu     = wmApp + 2
+	wmBeginUpdate  = wmApp + 3
+	wmUpdateResult = wmApp + 4
+	wmNull         = 0x0000
+	wmRButtonUp    = 0x0205
+	wmLButtonUp    = 0x0202
+	wmLButtonDbl   = 0x0203
 
 	wsExToolWindow = 0x00000080
 	wsExNoActivate = 0x08000000
@@ -67,6 +69,7 @@ const (
 
 	processCreateThread     = 0x0002
 	processQueryInformation = 0x0400
+	processSynchronize      = 0x00100000
 	processVMOperation      = 0x0008
 	processVMRead           = 0x0010
 	processVMWrite          = 0x0020
@@ -84,6 +87,8 @@ const (
 	cmdStyleAcrylic    = 104
 	cmdStartup         = 110
 	cmdRefresh         = 111
+	cmdCheckUpdates    = 112
+	cmdAutoUpdates     = 113
 	cmdLanguageEnglish = 120
 	cmdLanguageFrench  = 121
 	cmdLanguageSpanish = 122
@@ -107,4 +112,9 @@ const (
 	langSpanish
 	langGerman
 	langRussian
+)
+
+const (
+	moveFileReplaceExisting  = 0x00000001
+	moveFileDelayUntilReboot = 0x00000004
 )

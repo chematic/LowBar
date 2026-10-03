@@ -11,6 +11,9 @@ import (
 )
 
 func main() {
+	if len(os.Args) > 1 && os.Args[1] == "--apply-update" {
+		os.Exit(runUpdateHelper(os.Args[1:]))
+	}
 	if len(os.Args) > 1 && os.Args[1] == "--shutdown" {
 		requestExistingInstanceExit()
 		return
@@ -64,5 +67,6 @@ func main() {
 	if err := saveConfig(cfg); err != nil {
 		logError("config.save", "initial config save failed", err)
 	}
+	scheduleUpdateChecks(&cfg)
 	_ = messageLoop()
 }

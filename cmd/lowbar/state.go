@@ -8,19 +8,20 @@ import (
 )
 
 var (
-	globalConfig   *config
-	trayData       *notifyIconData
-	trayIcon       syscall.Handle
-	customTrayIcon bool
-	taskbarMsg     uint32
-	hookBlockMsg   uint32
-	processMutex   syscall.Handle
-	processStyle   = styleNormal
-	styleApplied   bool
-	logHandle      *os.File
-	shuttingDown   bool
-	menuPosted     bool
-	explorerPID    uint32
-	explorerModule uintptr
-	mainHwnd       syscall.Handle
+	globalConfig         *config
+	trayData             *notifyIconData
+	trayIcon             syscall.Handle
+	customTrayIcon       bool
+	taskbarMsg           uint32
+	hookBlockMsg         uint32
+	processMutex         syscall.Handle
+	processStyle         = styleNormal
+	styleApplied         bool
+	logHandle            *os.File
+	shuttingDown         bool
+	menuPosted           bool
+	explorerPID          uint32
+	explorerModule       uintptr
+	mainHwnd             syscall.Handle
+	pendingUpdateMessage string
 )
